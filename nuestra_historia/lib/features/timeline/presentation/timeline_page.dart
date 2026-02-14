@@ -63,6 +63,7 @@ class _TimelinePageState extends State<TimelinePage> {
                               padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: TimelineItem(
                                 index: eventIndex,
+                                date: event.date,
                                 title: event.title,
                                 description: event.description,
                                 imagesOnRight: eventIndex.isEven,
