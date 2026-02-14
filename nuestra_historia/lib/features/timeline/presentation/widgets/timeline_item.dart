@@ -97,18 +97,22 @@ class TimelineItem extends StatelessWidget {
           ),
         );
 
+        final left = imagesOnRight ? message : images;
+        final right = imagesOnRight ? images : message;
+
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 980),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (!imagesOnRight) images,
-                if (!imagesOnRight) const SizedBox(width: 8),
-                Column(
-                  children: [
-                    Container(
+                Expanded(child: Align(alignment: Alignment.center, child: left)),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 28,
+                  child: Center(
+                    child: Container(
                       width: 16,
                       height: 16,
                       decoration: BoxDecoration(
@@ -122,14 +126,10 @@ class TimelineItem extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: imageHeight * 1.1),
-                  ],
+                  ),
                 ),
-                if (imagesOnRight) const SizedBox(width: 8),
-                if (!imagesOnRight) message,
-                if (imagesOnRight) message,
-                if (imagesOnRight) const SizedBox(width: 8),
-                if (imagesOnRight) images,
+                const SizedBox(width: 8),
+                Expanded(child: Align(alignment: Alignment.center, child: right)),
               ],
             ),
           ),

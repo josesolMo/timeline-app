@@ -57,13 +57,17 @@ class _TimelinePageState extends State<TimelinePage> {
                       itemBuilder: (context, index) {
                         final eventIndex = timelineEvents.length - 1 - index;
                         final event = timelineEvents[eventIndex];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: TimelineItem(
-                            index: eventIndex,
-                            title: event.title,
-                            description: event.description,
-                            imagesOnRight: eventIndex.isEven,
+                        return SizedBox.expand(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: TimelineItem(
+                                index: eventIndex,
+                                title: event.title,
+                                description: event.description,
+                                imagesOnRight: eventIndex.isEven,
+                              ),
+                            ),
                           ),
                         );
                       },
