@@ -36,9 +36,21 @@ class TimelineItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _ImagePlaceholder(height: imageHeight),
+              Transform.translate(
+                offset: const Offset(6, -4),
+                child: Transform.rotate(
+                  angle: 0.09,
+                  child: _ImagePlaceholder(height: imageHeight),
+                ),
+              ),
               const SizedBox(height: 12),
-              _ImagePlaceholder(height: imageHeight),
+              Transform.translate(
+                offset: const Offset(-8, 6),
+                child: Transform.rotate(
+                  angle: -0.11,
+                  child: _ImagePlaceholder(height: imageHeight),
+                ),
+              ),
             ],
           ),
         );
@@ -128,13 +140,13 @@ class TimelineItem extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 70),
+                      const SizedBox(height: 40),
                       _OutlinedGlowText(
                         dateParts.dayMonth,
                         fontSize: 30,
                         strokeWidth: 1.8,
                       ),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -200,28 +212,39 @@ class _ImagePlaceholder extends StatelessWidget {
     return SizedBox(
       height: height,
       child: Container(
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: const LinearGradient(
-            colors: [Color(0xFF5B2EFF), Color(0xFF1D9BF0)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              blurRadius: 16,
-              offset: const Offset(0, 10),
+              color: Colors.black.withOpacity(0.35),
+              blurRadius: 18,
+              offset: const Offset(0, 12),
             ),
           ],
         ),
-        child: Center(
-          child: Icon(
-            Icons.favorite,
-            color: Colors.white.withOpacity(0.9),
-            size: 32,
-          ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF5B2EFF), Color(0xFF1D9BF0)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.favorite,
+                    color: Colors.white.withOpacity(0.9),
+                    size: 32,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
         ),
       ),
     );
