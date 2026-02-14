@@ -13,6 +13,7 @@ class TimelinePage extends StatefulWidget {
 
 class _TimelinePageState extends State<TimelinePage> {
   late final PageController _controller;
+  int _currentPage = 0;
 
   @override
   void initState() {
@@ -31,8 +32,9 @@ class _TimelinePageState extends State<TimelinePage> {
       return 0;
     }
     final page = _controller.page ?? _controller.initialPage.toDouble();
+    final timelinePage = (page - 1).clamp(0.0, timelineEvents.length.toDouble());
     final maxIndex = (timelineEvents.length - 1).clamp(1, 9999);
-    return (page / maxIndex).clamp(0.0, 1.0);
+    return (timelinePage / maxIndex).clamp(0.0, 1.0);
   }
 
   @override
@@ -53,9 +55,17 @@ class _TimelinePageState extends State<TimelinePage> {
                       controller: _controller,
                       scrollDirection: Axis.vertical,
                       reverse: true,
-                      itemCount: timelineEvents.length,
+                      itemCount: timelineEvents.length + 1,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
                       itemBuilder: (context, index) {
-                        final eventIndex = timelineEvents.length - 1 - index;
+                        if (index == 0) {
+                          return const _IntroPage();
+                        }
+                        final eventIndex = timelineEvents.length - index;
                         final event = timelineEvents[eventIndex];
                         return SizedBox.expand(
                           child: Center(
@@ -67,6 +77,7 @@ class _TimelinePageState extends State<TimelinePage> {
                                 title: event.title,
                                 description: event.description,
                                 imagesOnRight: eventIndex.isEven,
+                                isActive: index == _currentPage && index > 0,
                               ),
                             ),
                           ),
@@ -88,6 +99,39 @@ class _TimelinePageState extends State<TimelinePage> {
             },
           );
         },
+      ),
+    );
+  }
+}
+
+class _IntroPage extends StatelessWidget {
+  const _IntroPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Desliza hacia arriba',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.85),
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'para iniciar nuestra historia',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
