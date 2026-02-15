@@ -37,9 +37,11 @@ class TimelineItem extends StatelessWidget {
         final imageHeight = (constraints.maxHeight * 0.22).clamp(90.0, 160.0);
         final cardMinHeight = (constraints.maxHeight * 0.34).clamp(180.0, 260.0);
         final dateParts = _parseDate(date);
+        final isFinalPage = date == '14/02/2025';
 
         final mediaTop = media.isNotEmpty ? media[0] : null;
         final mediaBottom = media.length > 1 ? media[1] : null;
+        final finalMedia = media;
 
         final images = Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -143,65 +145,165 @@ class TimelineItem extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 980),
             child: Stack(
               children: [
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 18,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _OutlinedGlowText(
-                        dateParts.year,
-                        fontSize: 75,
-                        strokeWidth: 2.2,
-                      ),
-                    ],
+                if (!isFinalPage)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 18,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _OutlinedGlowText(
+                          dateParts.year,
+                          fontSize: 75,
+                          strokeWidth: 2.2,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 40),
-                      _OutlinedGlowText(
-                        dateParts.dayMonth,
-                        fontSize: 30,
-                        strokeWidth: 1.8,
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(child: Align(alignment: Alignment.center, child: left)),
-                          const SizedBox(width: 8),
-                          SizedBox(
-                            width: 28,
-                            child: Center(
-                              child: Container(
-                                width: 16,
-                                height: 16,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.6),
-                                      blurRadius: 12,
-                                    ),
-                                  ],
+                if (!isFinalPage)
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 40),
+                        _OutlinedGlowText(
+                          dateParts.dayMonth,
+                          fontSize: 30,
+                          strokeWidth: 1.8,
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(child: Align(alignment: Alignment.center, child: left)),
+                            const SizedBox(width: 8),
+                            SizedBox(
+                              width: 28,
+                              child: Center(
+                                child: Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.white.withOpacity(0.6),
+                                        blurRadius: 12,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
+                            const SizedBox(width: 8),
+                            Expanded(child: Align(alignment: Alignment.center, child: right)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                if (isFinalPage)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: 16,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _OutlinedGlowText(
+                          dateParts.year,
+                          fontSize: 70,
+                          strokeWidth: 2.2,
+                        ),
+                        const SizedBox(height: 6),
+                        _OutlinedGlowText(
+                          dateParts.dayMonth,
+                          fontSize: 28,
+                          strokeWidth: 1.8,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
-                          const SizedBox(width: 8),
-                          Expanded(child: Align(alignment: Alignment.center, child: right)),
+                        ),
+                        const SizedBox(height: 6),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 28),
+                          child: Text(
+                            description,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.85),
+                              fontSize: 13,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                if (isFinalPage)
+                  Positioned.fill(
+                    top: constraints.maxHeight * 0.35,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Stack(
+                        children: [
+                          _AlignedPolaroid(
+                            height: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            width: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            alignment: const Alignment(-0.85, -0.85),
+                            angle: -0.08,
+                            media: finalMedia.length > 0 ? finalMedia[0] : null,
+                          ),
+                          _AlignedPolaroid(
+                            height: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            width: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            alignment: const Alignment(0.85, -0.8),
+                            angle: 0.07,
+                            media: finalMedia.length > 1 ? finalMedia[1] : null,
+                          ),
+                          _AlignedPolaroid(
+                            height: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            width: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            alignment: const Alignment(-0.85, -0.1),
+                            angle: 0.06,
+                            media: finalMedia.length > 2 ? finalMedia[2] : null,
+                          ),
+                          _AlignedPolaroid(
+                            height: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            width: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            alignment: const Alignment(0.85, -0.05),
+                            angle: -0.05,
+                            media: finalMedia.length > 3 ? finalMedia[3] : null,
+                          ),
+                          _AlignedPolaroid(
+                            height: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            width: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            alignment: const Alignment(-0.85, 0.7),
+                            angle: -0.09,
+                            media: finalMedia.length > 4 ? finalMedia[4] : null,
+                          ),
+                          _AlignedPolaroid(
+                            height: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            width: (imageHeight * 0.9).clamp(90.0, 140.0),
+                            alignment: const Alignment(0.85, 0.65),
+                            angle: 0.1,
+                            media: finalMedia.length > 5 ? finalMedia[5] : null,
+                          ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
                 if (music != null)
                   Positioned(
                     left: 0,
@@ -228,14 +330,16 @@ class TimelineItem extends StatelessWidget {
 
 class _PolaroidFrame extends StatelessWidget {
   final double height;
+  final double? width;
   final Widget child;
 
-  const _PolaroidFrame({required this.height, required this.child});
+  const _PolaroidFrame({required this.height, this.width, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
+      width: width ?? height,
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -253,6 +357,37 @@ class _PolaroidFrame extends StatelessWidget {
             Expanded(child: child),
             const SizedBox(height: 12),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AlignedPolaroid extends StatelessWidget {
+  final double height;
+  final double width;
+  final Alignment alignment;
+  final double angle;
+  final TimelineMedia? media;
+
+  const _AlignedPolaroid({
+    required this.height,
+    required this.width,
+    required this.alignment,
+    required this.angle,
+    required this.media,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: alignment,
+      child: Transform.rotate(
+        angle: angle,
+        child: _PolaroidFrame(
+          height: height,
+          width: width,
+          child: _MediaSlot(media: media),
         ),
       ),
     );

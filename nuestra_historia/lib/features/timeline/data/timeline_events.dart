@@ -123,6 +123,22 @@ const timelineEvents = <TimelineEvent>[
       'assets/images/poema3.jpeg',
     ],
   ),
-  TimelineEvent('02/01/2025', 'Nuestro aniversario', 'Un año de magia.'),
-  TimelineEvent('14/02/2025', 'Un futuro juntos', 'Seguimos escribiendo nuestra historia.'),
+  TimelineEvent(
+    '14/02/2025',
+    'Un futuro juntos',
+    'Seguimos escribiendo nuestra historia.',
+    media: [
+      TimelineMedia.image('assets/images/futuro1.jpeg'),
+      TimelineMedia.image('assets/images/futuro2.jpeg'),
+      TimelineMedia.image('assets/images/futuro3.jpeg'),
+      TimelineMedia.image('assets/images/futuro4.jpeg'),
+      TimelineMedia.image('assets/images/futuro5.jpeg'),
+      TimelineMedia.image('assets/images/futuro6.jpeg'),
+    ],
+    music: TimelineMusic(
+      coverAsset: 'assets/images/extreme_caratula.jpg',
+      audioAsset: 'assets/audio/words.mp3',
+      title: 'More than Words',
+    ),
+  ),
 ];
