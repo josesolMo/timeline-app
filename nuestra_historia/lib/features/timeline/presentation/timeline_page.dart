@@ -73,7 +73,7 @@ class _TimelinePageState extends State<TimelinePage> {
                             },
                           );
                         }
-                        final eventIndex = timelineEvents.length - index;
+                        final eventIndex = index - 1;
                         final event = timelineEvents[eventIndex];
                         return SizedBox.expand(
                           child: Center(
@@ -84,6 +84,8 @@ class _TimelinePageState extends State<TimelinePage> {
                                 date: event.date,
                                 title: event.title,
                                 description: event.description,
+                                media: event.media,
+                                music: event.music,
                                 imagesOnRight: eventIndex.isEven,
                                 isActive: index == _currentPage && index > 0,
                               ),

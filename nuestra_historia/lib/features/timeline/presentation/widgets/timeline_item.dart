@@ -1,14 +1,18 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 import 'music_strip.dart';
+import '../../../timeline/models/timeline_event.dart';
 
 class TimelineItem extends StatelessWidget {
   final int index;
   final String date;
   final String title;
   final String description;
+  final List<TimelineMedia> media;
+  final TimelineMusic? music;
   final bool imagesOnRight;
   final bool isActive;
 
@@ -18,6 +22,8 @@ class TimelineItem extends StatelessWidget {
     required this.date,
     required this.title,
     required this.description,
+    required this.media,
+    required this.music,
     required this.imagesOnRight,
     required this.isActive,
   });
@@ -27,8 +33,11 @@ class TimelineItem extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final imageHeight = (constraints.maxHeight * 0.22).clamp(90.0, 160.0);
-        final cardMinHeight = (constraints.maxHeight * 0.28).clamp(140.0, 220.0);
+        final cardMinHeight = (constraints.maxHeight * 0.34).clamp(180.0, 260.0);
         final dateParts = _parseDate(date);
+
+        final mediaTop = media.isNotEmpty ? media[0] : null;
+        final mediaBottom = media.length > 1 ? media[1] : null;
 
         final images = Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -40,7 +49,10 @@ class TimelineItem extends StatelessWidget {
                 offset: const Offset(6, -4),
                 child: Transform.rotate(
                   angle: 0.09,
-                  child: _ImagePlaceholder(height: imageHeight),
+                  child: _PolaroidFrame(
+                    height: imageHeight,
+                    child: _MediaSlot(media: mediaTop),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -48,7 +60,10 @@ class TimelineItem extends StatelessWidget {
                 offset: const Offset(-8, 6),
                 child: Transform.rotate(
                   angle: -0.11,
-                  child: _ImagePlaceholder(height: imageHeight),
+                  child: _PolaroidFrame(
+                    height: imageHeight,
+                    child: _MediaSlot(media: mediaBottom),
+                  ),
                 ),
               ),
             ],
@@ -64,7 +79,7 @@ class TimelineItem extends StatelessWidget {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
                 child: Container(
-                  padding: const EdgeInsets.all(18),
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(28),
                     gradient: LinearGradient(
@@ -94,14 +109,16 @@ class TimelineItem extends StatelessWidget {
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
+                          height: 1.25,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 14),
                       Text(
                         description,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.85),
                           fontSize: 14,
+                          height: 1.4,
                         ),
                       ),
                     ],
@@ -179,20 +196,21 @@ class TimelineItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 18,
-                  child: Center(
-                    child: MusicStrip(
-                      coverAsset: 'assets/images/CAS_caratula.jpg',
-                      vinylAsset: 'assets/images/vinyl_record.png',
-                      audioAsset: 'assets/audio/apocalypse.mp3',
-                      title: 'Apocalypse',
-                      isActive: isActive,
+                if (music != null)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 18,
+                    child: Center(
+                      child: MusicStrip(
+                        coverAsset: music!.coverAsset,
+                        vinylAsset: 'assets/images/vinyl_record.png',
+                        audioAsset: music!.audioAsset,
+                        title: music!.title,
+                        isActive: isActive,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
@@ -202,10 +220,11 @@ class TimelineItem extends StatelessWidget {
   }
 }
 
-class _ImagePlaceholder extends StatelessWidget {
+class _PolaroidFrame extends StatelessWidget {
   final double height;
+  final Widget child;
 
-  const _ImagePlaceholder({required this.height});
+  const _PolaroidFrame({required this.height, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -225,27 +244,100 @@ class _ImagePlaceholder extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF5B2EFF), Color(0xFF1D9BF0)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.favorite,
-                    color: Colors.white.withOpacity(0.9),
-                    size: 32,
-                  ),
-                ),
-              ),
-            ),
+            Expanded(child: child),
             const SizedBox(height: 12),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _MediaSlot extends StatelessWidget {
+  final TimelineMedia? media;
+
+  const _MediaSlot({required this.media});
+
+  @override
+  Widget build(BuildContext context) {
+    if (media == null) {
+      return _PlaceholderMedia();
+    }
+    switch (media!.type) {
+      case TimelineMediaType.image:
+        return Image.asset(media!.assetPath, fit: BoxFit.cover);
+      case TimelineMediaType.video:
+        return _VideoMedia(assetPath: media!.assetPath);
+    }
+  }
+}
+
+class _PlaceholderMedia extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF5B2EFF), Color(0xFF1D9BF0)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          Icons.favorite,
+          color: Colors.white.withOpacity(0.9),
+          size: 32,
+        ),
+      ),
+    );
+  }
+}
+
+class _VideoMedia extends StatefulWidget {
+  final String assetPath;
+
+  const _VideoMedia({required this.assetPath});
+
+  @override
+  State<_VideoMedia> createState() => _VideoMediaState();
+}
+
+class _VideoMediaState extends State<_VideoMedia> {
+  late final VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset(widget.assetPath)
+      ..setLooping(true)
+      ..setVolume(0)
+      ..initialize().then((_) {
+        if (mounted) {
+          setState(() {});
+        }
+        _controller.play();
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_controller.value.isInitialized) {
+      return _PlaceholderMedia();
+    }
+    return FittedBox(
+      fit: BoxFit.cover,
+      clipBehavior: Clip.hardEdge,
+      child: SizedBox(
+        width: _controller.value.size.width,
+        height: _controller.value.size.height,
+        child: VideoPlayer(_controller),
       ),
     );
   }
