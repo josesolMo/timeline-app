@@ -13,6 +13,7 @@ class TimelineItem extends StatelessWidget {
   final String description;
   final List<TimelineMedia> media;
   final TimelineMusic? music;
+  final List<String> poemAssets;
   final bool imagesOnRight;
   final bool isActive;
 
@@ -24,6 +25,7 @@ class TimelineItem extends StatelessWidget {
     required this.description,
     required this.media,
     required this.music,
+    required this.poemAssets,
     required this.imagesOnRight,
     required this.isActive,
   });
@@ -121,12 +123,9 @@ class TimelineItem extends StatelessWidget {
                           height: 1.3,
                         ),
                       ),
-                      if (index == 3 || index == 4) ...[
+                      if (poemAssets.isNotEmpty) ...[
                         const SizedBox(height: 14),
-                        _MiniEnvelopeButton(
-                          imageAsset:
-                              index == 4 ? 'assets/images/monos.jpeg' : 'assets/images/poema1.jpeg',
-                        ),
+                        _MiniEnvelopeButton(imageAssets: poemAssets),
                       ],
                     ],
                   ),
@@ -414,9 +413,9 @@ class _OutlinedGlowText extends StatelessWidget {
 }
 
 class _MiniEnvelopeButton extends StatefulWidget {
-  final String imageAsset;
+  final List<String> imageAssets;
 
-  const _MiniEnvelopeButton({required this.imageAsset});
+  const _MiniEnvelopeButton({required this.imageAssets});
 
   @override
   State<_MiniEnvelopeButton> createState() => _MiniEnvelopeButtonState();
@@ -448,6 +447,8 @@ class _MiniEnvelopeButtonState extends State<_MiniEnvelopeButton>
       context: context,
       barrierDismissible: true,
       builder: (context) {
+        final controller = PageController();
+        final notifier = ValueNotifier<int>(0);
         return Dialog(
           insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
           backgroundColor: Colors.black.withOpacity(0.6),
@@ -457,7 +458,57 @@ class _MiniEnvelopeButtonState extends State<_MiniEnvelopeButton>
                 padding: const EdgeInsets.all(12),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(widget.imageAsset, fit: BoxFit.contain),
+                  child: PageView.builder(
+                    controller: controller,
+                    itemCount: widget.imageAssets.length,
+                    onPageChanged: (index) => notifier.value = index,
+                    itemBuilder: (context, index) {
+                      return Image.asset(
+                        widget.imageAssets[index],
+                        fit: BoxFit.contain,
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 6,
+                top: 0,
+                bottom: 0,
+                child: ValueListenableBuilder<int>(
+                  valueListenable: notifier,
+                  builder: (context, page, _) {
+                    return IconButton(
+                      onPressed: page == 0
+                          ? null
+                          : () => controller.previousPage(
+                                duration: const Duration(milliseconds: 250),
+                                curve: Curves.easeOut,
+                              ),
+                      icon: const Icon(Icons.chevron_left),
+                      color: Colors.white,
+                    );
+                  },
+                ),
+              ),
+              Positioned(
+                right: 6,
+                top: 0,
+                bottom: 0,
+                child: ValueListenableBuilder<int>(
+                  valueListenable: notifier,
+                  builder: (context, page, _) {
+                    return IconButton(
+                      onPressed: page == widget.imageAssets.length - 1
+                          ? null
+                          : () => controller.nextPage(
+                                duration: const Duration(milliseconds: 250),
+                                curve: Curves.easeOut,
+                              ),
+                      icon: const Icon(Icons.chevron_right),
+                      color: Colors.white,
+                    );
+                  },
                 ),
               ),
               Positioned(

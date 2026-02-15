@@ -56,6 +56,9 @@ const timelineEvents = <TimelineEvent>[
       audioAsset: 'assets/audio/luther.mp3',
       title: 'Luther',
     ),
+    poemAssets: [
+      'assets/images/poema1.jpeg',
+    ],
   ),
   TimelineEvent(
     '10/07/2025',
@@ -70,6 +73,9 @@ const timelineEvents = <TimelineEvent>[
       audioAsset: 'assets/audio/sweet.mp3',
       title: 'Sweet',
     ),
+    poemAssets: [
+      'assets/images/monos.jpeg',
+    ],
   ),
   TimelineEvent(
     '11-12 Jul. 2025',
@@ -85,8 +91,38 @@ const timelineEvents = <TimelineEvent>[
       title: 'Something Stupid',
     ),
   ),
-  TimelineEvent('10/05/2024', 'La primera sorpresa', 'Tu cara lo dijo todo.'),
-  TimelineEvent('01/06/2024', 'El primer “te amo”', 'Y fue real.'),
+  TimelineEvent(
+    '15/07/2025',
+    'Paseando juntos',
+    'Conociendo las calles de tu ciudad, imaginando un futuro juntos y viviendo experiencias con la mejor compañera de vida que podría pedir 💕',
+    media: [
+      TimelineMedia.image('assets/images/carrusel.jpeg'),
+      TimelineMedia.image('assets/images/onep.jpeg'),
+    ],
+    music: TimelineMusic(
+      coverAsset: 'assets/images/lennon_caratula.jpg',
+      audioAsset: 'assets/audio/boy.mp3',
+      title: 'Beautiful Boy',
+    ),
+  ),
+  TimelineEvent(
+    '01/11/2025',
+    'Nuestro aniversario',
+    'Luego de un viaje inolvidable llega nuestra fecha especial, un año que cambio nuestras vidas y me permitió volver a soñar 🌠',
+    media: [
+      TimelineMedia.image('assets/images/besos1.jpeg'),
+      TimelineMedia.image('assets/images/besos2.jpeg'),
+    ],
+    music: TimelineMusic(
+      coverAsset: 'assets/images/roy_caratula.jpg',
+      audioAsset: 'assets/audio/sun.mp3',
+      title: 'MY SUN',
+    ),
+    poemAssets: [
+      'assets/images/poema2.jpeg',
+      'assets/images/poema3.jpeg',
+    ],
+  ),
   TimelineEvent('02/01/2025', 'Nuestro aniversario', 'Un año de magia.'),
   TimelineEvent('14/02/2025', 'Un futuro juntos', 'Seguimos escribiendo nuestra historia.'),
 ];

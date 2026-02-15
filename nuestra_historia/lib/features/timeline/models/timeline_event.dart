@@ -4,6 +4,7 @@ class TimelineEvent {
   final String description;
   final List<TimelineMedia> media;
   final TimelineMusic? music;
+  final List<String> poemAssets;
 
   const TimelineEvent(
     this.date,
@@ -11,6 +12,7 @@ class TimelineEvent {
     this.description, {
     this.media = const [],
     this.music,
+    this.poemAssets = const [],
   });
 }
 

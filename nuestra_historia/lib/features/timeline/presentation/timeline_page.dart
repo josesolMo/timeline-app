@@ -86,6 +86,7 @@ class _TimelinePageState extends State<TimelinePage> {
                                 description: event.description,
                                 media: event.media,
                                 music: event.music,
+                                poemAssets: event.poemAssets,
                                 imagesOnRight: eventIndex.isEven,
                                 isActive: index == _currentPage && index > 0,
                               ),
