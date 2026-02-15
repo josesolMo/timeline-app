@@ -57,8 +57,34 @@ const timelineEvents = <TimelineEvent>[
       title: 'Luther',
     ),
   ),
-  TimelineEvent('02/03/2024', 'El primer abrazo', 'El lugar al que siempre quiero volver.'),
-  TimelineEvent('20/04/2024', 'Nuestro primer viaje', 'Kilómetros de recuerdos.'),
+  TimelineEvent(
+    '10/07/2025',
+    'Juntos al fin',
+    'El primer abrazo, el primer beso, sosteniendo tu manita todo cobró sentido ✨',
+    media: [
+      TimelineMedia.image('assets/images/mexico1.jpeg'),
+      TimelineMedia.image('assets/images/mexico2.jpeg'),
+    ],
+    music: TimelineMusic(
+      coverAsset: 'assets/images/CAS2_caratula.webp',
+      audioAsset: 'assets/audio/sweet.mp3',
+      title: 'Sweet',
+    ),
+  ),
+  TimelineEvent(
+    '11-12 Jul. 2025',
+    'Días increíbles a tu lado',
+    'Viviendo un sueño, viviendo contigo. Momentos que llevaré conmigo para toda la vida 🥹',
+    media: [
+      TimelineMedia.image('assets/images/mexico3.jpeg'),
+      TimelineMedia.image('assets/images/mexico4.jpeg'),
+    ],
+    music: TimelineMusic(
+      coverAsset: 'assets/images/something_caratula.jpg',
+      audioAsset: 'assets/audio/something.mp3',
+      title: 'Something Stupid',
+    ),
+  ),
   TimelineEvent('10/05/2024', 'La primera sorpresa', 'Tu cara lo dijo todo.'),
   TimelineEvent('01/06/2024', 'El primer “te amo”', 'Y fue real.'),
   TimelineEvent('02/01/2025', 'Nuestro aniversario', 'Un año de magia.'),

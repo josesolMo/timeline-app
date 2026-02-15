@@ -121,10 +121,11 @@ class TimelineItem extends StatelessWidget {
                           height: 1.3,
                         ),
                       ),
-                      if (index == 3) ...[
+                      if (index == 3 || index == 4) ...[
                         const SizedBox(height: 14),
                         _MiniEnvelopeButton(
-                          imageAsset: 'assets/images/poema1.jpeg',
+                          imageAsset:
+                              index == 4 ? 'assets/images/monos.jpeg' : 'assets/images/poema1.jpeg',
                         ),
                       ],
                     ],
