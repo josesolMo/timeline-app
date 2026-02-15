@@ -117,10 +117,16 @@ class TimelineItem extends StatelessWidget {
                         description,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.85),
-                          fontSize: 14,
-                          height: 1.4,
+                          fontSize: 13,
+                          height: 1.3,
                         ),
                       ),
+                      if (index == 3) ...[
+                        const SizedBox(height: 14),
+                        _MiniEnvelopeButton(
+                          imageAsset: 'assets/images/poema1.jpeg',
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -260,12 +266,25 @@ class _MediaSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: ClipRect(
+        child: media == null ? _PlaceholderMedia() : _buildMedia(),
+      ),
+    );
+  }
+
+  Widget _buildMedia() {
     if (media == null) {
       return _PlaceholderMedia();
     }
     switch (media!.type) {
       case TimelineMediaType.image:
-        return Image.asset(media!.assetPath, fit: BoxFit.cover);
+        return FittedBox(
+          fit: BoxFit.cover,
+          clipBehavior: Clip.hardEdge,
+          child: Image.asset(media!.assetPath),
+        );
       case TimelineMediaType.video:
         return _VideoMedia(assetPath: media!.assetPath);
     }
@@ -393,7 +412,127 @@ class _OutlinedGlowText extends StatelessWidget {
   }
 }
 
+class _MiniEnvelopeButton extends StatefulWidget {
+  final String imageAsset;
+
+  const _MiniEnvelopeButton({required this.imageAsset});
+
+  @override
+  State<_MiniEnvelopeButton> createState() => _MiniEnvelopeButtonState();
+}
+
+class _MiniEnvelopeButtonState extends State<_MiniEnvelopeButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+      lowerBound: 0.96,
+      upperBound: 1.04,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _openPoem(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Dialog(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          backgroundColor: Colors.black.withOpacity(0.6),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(widget.imageAsset, fit: BoxFit.contain),
+                ),
+              ),
+              Positioned(
+                right: 6,
+                top: 6,
+                child: IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _openPoem(context),
+      child: ScaleTransition(
+        scale: _controller,
+        child: CustomPaint(
+          painter: _MiniEnvelopePainter(),
+          child: const SizedBox(width: 52, height: 36),
+        ),
+      ),
+    );
+  }
+}
+
+class _MiniEnvelopePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final basePaint = Paint()
+      ..color = const Color(0xFFF6A8C1)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.6;
+
+    final fillPaint = Paint()
+      ..color = const Color(0xFFFFD6E6)
+      ..style = PaintingStyle.fill;
+
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    canvas.drawRect(rect, fillPaint);
+    canvas.drawRect(rect, basePaint);
+
+    final flapPath = Path()
+      ..moveTo(0, 0)
+      ..lineTo(size.width / 2, size.height * 0.6)
+      ..lineTo(size.width, 0);
+    canvas.drawPath(flapPath, basePaint);
+
+    final bottomPath = Path()
+      ..moveTo(0, size.height)
+      ..lineTo(size.width / 2, size.height * 0.45)
+      ..lineTo(size.width, size.height);
+    canvas.drawPath(bottomPath, basePaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
 _DateParts _parseDate(String raw) {
+  final trimmed = raw.trim();
+  final tokens = trimmed.split(RegExp(r'\s+'));
+  if (tokens.length >= 2 && RegExp(r'^\d{4}$').hasMatch(tokens.last)) {
+    final year = tokens.last;
+    final dayMonth = tokens.sublist(0, tokens.length - 1).join(' ');
+    if (RegExp(r'[A-Za-zÁÉÍÓÚáéíóúÑñ]').hasMatch(dayMonth)) {
+      return _DateParts(dayMonth: dayMonth, year: year);
+    }
+  }
   final parts = raw.split('/');
   if (parts.length != 3) {
     return _DateParts(dayMonth: raw, year: '');

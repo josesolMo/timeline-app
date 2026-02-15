@@ -29,8 +29,34 @@ const timelineEvents = <TimelineEvent>[
       title: 'Ojitos de Miel',
     ),
   ),
-  TimelineEvent('28/01/2024', 'La primera foto', 'La que guardo como tesoro.'),
-  TimelineEvent('14/02/2024', 'Nuestra primera cita', 'Nervios y sonrisas.'),
+  TimelineEvent(
+    '01/11/2024',
+    'Nos hicimos pareja',
+    'Llegaron los me gustas, los te amo y eventualmente con el tiempo nos convertimos en la pareja más bonita y fuerte que conozco. Gracias por hacerme tan feliz aquella noche 🥹',
+    media: [
+      TimelineMedia.image('assets/images/citla1.jpeg'),
+      TimelineMedia.image('assets/images/dibujo1.jpeg'),
+    ],
+    music: TimelineMusic(
+      coverAsset: 'assets/images/CAS_caratula.jpg',
+      audioAsset: 'assets/audio/apocalypse.mp3',
+      title: 'Apocalypse',
+    ),
+  ),
+  TimelineEvent(
+    'Nov-Dic 2024',
+    'Meses de mucho cariño',
+    'Con tus salidas y forma de ser, me sacas una sonrisa todos los días :)',
+    media: [
+      TimelineMedia.image('assets/images/dibujo2.jpeg'),
+      TimelineMedia.video('assets/videos/citla2.mp4'),
+    ],
+    music: TimelineMusic(
+      coverAsset: 'assets/images/gnx_caratula.jpg',
+      audioAsset: 'assets/audio/luther.mp3',
+      title: 'Luther',
+    ),
+  ),
   TimelineEvent('02/03/2024', 'El primer abrazo', 'El lugar al que siempre quiero volver.'),
   TimelineEvent('20/04/2024', 'Nuestro primer viaje', 'Kilómetros de recuerdos.'),
   TimelineEvent('10/05/2024', 'La primera sorpresa', 'Tu cara lo dijo todo.'),
