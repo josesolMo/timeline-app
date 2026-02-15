@@ -31,7 +31,7 @@ jobs:
         working-directory: ./nuestra_historia
     
       - name: Build Flutter Web
-        run: flutter build web --release --web-renderer html
+        run: flutter build web --release
         working-directory: ./nuestra_historia
     
       - uses: actions/checkout@v3
@@ -64,5 +64,6 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_SALMON_GLACIER_0022A6D10 }}
           action: "close"
+
 
 
